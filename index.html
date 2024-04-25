@@ -392,9 +392,19 @@ function getClubName(d) {
  
 // Zooms to feature when clicked
     function zoomToFeature(e) {
-        //map.fitBounds(e.target.getBounds(),{padding: [200,200]});
-        latilong = e.target.getBounds().getCenter();
-        map.setView(latilong, 14);
+        var maxZoom = 14;
+        var bounds = e.target.getBounds(); // Get the bounding box of the feature
+
+        // Determine the appropriate zoom level
+        var zoomLevel = map.getBoundsZoom(bounds);
+
+        // If the calculated zoom level is greater than the maximum allowed zoom level, limit it
+        if (zoomLevel > maxZoom) {
+            zoomLevel = maxZoom;
+        }
+        console.log(zoomLevel);
+        // Zoom to the feature at the calculated zoom level
+        map.fitBounds(bounds, { maxZoom: zoomLevel });
     }
 
 // Tasks to do to each feature on creation
