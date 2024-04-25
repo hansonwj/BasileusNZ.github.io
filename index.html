@@ -369,8 +369,13 @@ function getClubName(d) {
     
 
 // Highlights displays info for the layer under the mouse
+    var selected;
     function highlightFeature(e) {
+        if (selected){
+            resetHighlight(selected);
+        }
         var layer = e.target;
+        selected = layer;
         layer.openTooltip()
         layer.setStyle({
             weight: 4,
@@ -386,7 +391,8 @@ function getClubName(d) {
 // Turns off the highlight
     var geojson; // makes empty variable
     function resetHighlight(e) {
-        geojson.resetStyle(e.target);
+        geojson.resetStyle(selected);
+        delete selected;
         info.update();
     }
  
@@ -402,9 +408,8 @@ function getClubName(d) {
         if (zoomLevel > maxZoom) {
             zoomLevel = maxZoom;
         }
-        console.log(zoomLevel);
         // Zoom to the feature at the calculated zoom level
-        map.fitBounds(bounds, { maxZoom: zoomLevel });
+        map.setView(bounds.getCenter(), zoomLevel);
     }
 
 // Tasks to do to each feature on creation
